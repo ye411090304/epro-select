@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>图片二维码目录</title>
+  <style>
+    :root {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #172033;
+      background: #f5f7fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+    }
+
+    main {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    .note {
+      margin: 0;
+      color: #596579;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid #dbe2ef;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(23, 32, 51, 0.06);
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    p {
+      margin: 0;
+      color: #596579;
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .qr {
+      width: 180px;
+      height: 180px;
+      justify-self: center;
+      background: #fff;
+      image-rendering: pixelated;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .button,
+    button {
+      min-height: 38px;
+      border: 0;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      color: #fff;
+      background: #1769e0;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button {
+      background: #344054;
+    }
+
+    .empty {
+      padding: 20px;
+      border: 1px dashed #c7d0df;
+      border-radius: 8px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>图片二维码目录</h1>
+      <p class="note">每张图片都会生成一个单独网页。二维码内容使用当前打开目录页的同源地址，适合本地 Wi-Fi 测试，也适合上传服务器后直接生成公网二维码。</p>
+    </header>
+    
+    <section class="grid">
+      <article class="card" data-page="pages/EV1290.html">
+        <div>
+          <h2>EV1290 手持吸尘器说明书_01</h2>
+          <p>EV1290 手持吸尘器说明书_01.png</p>
+        </div>
+        <img class="qr" alt="EV1290 手持吸尘器说明书_01 QR code">
+        <div class="actions">
+          <a class="button open-page" href="pages/EV1290.html" target="_blank" rel="noopener">打开页面</a>
+          <a class="button download-qr" href="#" download="EV1290-qr.png">下载二维码</a>
+          <button type="button" class="copy-url">复制链接</button>
+        </div>
+      </article>
+      <article class="card" data-page="pages/EV1396.html">
+        <div>
+          <h2>EV1396 150W 说明书 01</h2>
+          <p>EV1396 150W 说明书 01.png</p>
+        </div>
+        <img class="qr" alt="EV1396 150W 说明书 01 QR code">
+        <div class="actions">
+          <a class="button open-page" href="pages/EV1396.html" target="_blank" rel="noopener">打开页面</a>
+          <a class="button download-qr" href="#" download="EV1396-qr.png">下载二维码</a>
+          <button type="button" class="copy-url">复制链接</button>
+        </div>
+      </article>
+      <article class="card" data-page="pages/EV3015.html">
+        <div>
+          <h2>EV3015擦窗机说明书_01</h2>
+          <p>EV3015擦窗机说明书_01.png</p>
+        </div>
+        <img class="qr" alt="EV3015擦窗机说明书_01 QR code">
+        <div class="actions">
+          <a class="button open-page" href="pages/EV3015.html" target="_blank" rel="noopener">打开页面</a>
+          <a class="button download-qr" href="#" download="EV3015-qr.png">下载二维码</a>
+          <button type="button" class="copy-url">复制链接</button>
+        </div>
+      </article>
+      <article class="card" data-page="pages/EV3620.html">
+        <div>
+          <h2>EV3620 说明书01</h2>
+          <p>EV3620 说明书01.png</p>
+        </div>
+        <img class="qr" alt="EV3620 说明书01 QR code">
+        <div class="actions">
+          <a class="button open-page" href="pages/EV3620.html" target="_blank" rel="noopener">打开页面</a>
+          <a class="button download-qr" href="#" download="EV3620-qr.png">下载二维码</a>
+          <button type="button" class="copy-url">复制链接</button>
+        </div>
+      </article>
+      <article class="card" data-page="pages/EV1101HH.html">
+        <div>
+          <h2>使用说明书EV1101HH_ePro_Select_logo已替换_00</h2>
+          <p>使用说明书EV1101HH_ePro_Select_logo已替换_00.png</p>
+        </div>
+        <img class="qr" alt="使用说明书EV1101HH_ePro_Select_logo已替换_00 QR code">
+        <div class="actions">
+          <a class="button open-page" href="pages/EV1101HH.html" target="_blank" rel="noopener">打开页面</a>
+          <a class="button download-qr" href="#" download="EV1101HH-qr.png">下载二维码</a>
+          <button type="button" class="copy-url">复制链接</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    function qrUrl(value) {
+      return "https://api.qrserver.com/v1/create-qr-code/?size=720x720&margin=24&format=png&data=" + encodeURIComponent(value);
+    }
+
+    document.querySelectorAll(".card").forEach((card) => {
+      const pageUrl = new URL(card.dataset.page, window.location.href).href;
+      const qr = card.querySelector(".qr");
+      const openPage = card.querySelector(".open-page");
+      const downloadQr = card.querySelector(".download-qr");
+      const copyUrl = card.querySelector(".copy-url");
+      const imageUrl = qrUrl(pageUrl);
+
+      qr.src = imageUrl;
+      openPage.href = pageUrl;
+      downloadQr.href = imageUrl;
+      copyUrl.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(pageUrl);
+        copyUrl.textContent = "已复制";
+        setTimeout(() => {
+          copyUrl.textContent = "复制链接";
+        }, 1200);
+      });
+    });
+  </script>
+</body>
+</html>
