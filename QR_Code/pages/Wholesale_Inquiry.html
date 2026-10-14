@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholesale Inquiry</title>
+    <style>
+        /* 页面基础重置与背景设定 */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #050505; /* 深色背景 */
+            background-image: 
+                radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        /* 中间炫酷文字容器 */
+        .hero-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 炫酷文字样式核心 */
+        .glow-text {
+            font-size: 5rem; /* 字体大小 */
+            font-weight: 900; /* 极粗字体 */
+            text-transform: uppercase; /* 全大写 */
+            text-align: center;
+            letter-spacing: 5px;
+            
+            /* 核心：流光渐变文字 */
+            background: linear-gradient(
+                90deg, 
+                #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
+            );
+            background-size: 400%; /* 放大背景以便移动 */
+            -webkit-background-clip: text; /* 将背景裁剪为文字形状 */
+            color: transparent; /* 文字透明，显示背景 */
+            
+            /* 动画定义 */
+            animation: glowing 8s linear infinite;
+            
+            /* 额外的发光滤镜效果 */
+            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        /* 鼠标悬停时的微交互 */
+        .glow-text:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 25px rgba(255, 0, 255, 0.8));
+        }
+
+        /* 定义流光动画 */
+        @keyframes glowing {
+            0% { background-position: 0%; }
+            100% { background-position: 400%; }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .glow-text {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-text">
+        <h1 class="glow-text">Wholesale Inquiry</h1>
+    </div>
+
+</body>
+</html>
