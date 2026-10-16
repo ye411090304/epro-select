@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wholesale Inquiry | ePro Select</title>
+<meta name="description" content="Tell us what you're looking for. We'll help you explore the right products for your business.">
+<style>
+  :root{
+    /* 取色自设计稿 */
+    --bg:#33363C;          /* 页面底色 */
+    --surface:#272A2F;     /* 卡片 / 输入框 */
+    --surface-2:#3F4146;   /* 顶栏 / 页脚 / 提交提示 */
+    --border:#434549;      /* 分隔线 / 输入框描边 */
+    --text:#F5F5F5;        /* 主文字 */
+    --muted:#AFB0B3;       /* 次级文字 */
+    --dim:#6E7074;         /* placeholder */
+    --required:#EA3323;    /* 必填星号 */
+    --btn:#B8B8B8;         /* 按钮底色 */
+    --btn-text:#E6E6E6;    /* 按钮文字（原稿即近白色，对比度偏低，想更清晰可改 #1C1E22） */
+    --radius:12px;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    font-size:15px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* ---------- 顶栏 ---------- */
+  .topbar{background:var(--surface-2)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .brand{font-size:17px;font-weight:600;letter-spacing:.2px;color:#fff}
+  .topbar .tag{font-size:14px;color:var(--muted)}
+
+  /* ---------- 标题区 ---------- */
+  .hero{padding:36px 0 8px}
+  .hero h1{margin:0;font-size:27px;line-height:1.25;font-weight:600}
+  .hero p{margin:10px 0 0;color:var(--muted);font-size:14px;max-width:640px}
+
+  /* ---------- 表格区 ---------- */
+  .section{padding:28px 0}
+  .section > h2{margin:0 0 16px;font-size:18px;font-weight:600}
+  .cards{display:grid;grid-template-columns:1fr;gap:14px}
+  .card{background:var(--surface);border-radius:var(--radius);padding:18px 20px}
+  .card h3{margin:0 0 6px;font-size:14px;font-weight:600;color:var(--text)}
+  .card table{width:100%;border-collapse:collapse;margin-top:6px}
+  .card td{padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;vertical-align:top}
+  .card tr:last-child td{border-bottom:0}
+  .card td.val{text-align:right;white-space:nowrap;color:var(--text);font-variant-numeric:tabular-nums}
+  .card td.key{color:var(--muted);padding-right:12px}
+  .card .empty{color:var(--dim);font-size:14px;padding:8px 0 2px}
+
+  /* ---------- 表单 ---------- */
+  .formcard{background:var(--surface);border-radius:var(--radius);padding:24px 20px}
+  .formcard h2{margin:0;font-size:20px;font-weight:600}
+  .formcard .hint{margin:6px 0 22px;font-size:13px;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr;gap:16px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;font-weight:500;margin-bottom:8px}
+  .req{color:var(--required);margin-left:2px}
+  input[type=text],input[type=email],input[type=number]{
+    width:100%;background:var(--surface);color:var(--text);
+    border:1px solid var(--border);border-radius:8px;
+    padding:12px 14px;font-size:15px;font-family:inherit;outline:none;
+    transition:border-color .15s;
+  }
+  input::placeholder{color:var(--dim)}
+  input:focus{border-color:#6E7074}
+  .err{display:none;color:var(--required);font-size:12px;margin:6px 0 0}
+  .field.invalid input{border-color:var(--required)}
+  .field.invalid .err{display:block}
+
+  /* 多选项 */
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:4px}
+  .check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px;line-height:1.4}
+  .check input{position:absolute;opacity:0;width:0;height:0}
+  .box{
+    flex:0 0 auto;width:18px;height:18px;margin-top:1px;
+    border:1px solid #5D5F63;border-radius:4px;background:var(--surface);
+    display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s;
+  }
+  .check input:checked + .box{background:var(--btn);border-color:var(--btn)}
+  .check input:checked + .box::after{
+    content:"";width:5px;height:9px;border:solid #22242A;border-width:0 2px 2px 0;
+    transform:translateY(-1px) rotate(45deg);
+  }
+
+  .consent{display:flex;align-items:flex-start;gap:10px;margin:20px 0 4px;cursor:pointer;font-size:13px;color:var(--muted)}
+  .consent a{color:var(--text);text-decoration:underline}
+  .hp{position:absolute;left:-9999px;opacity:0}
+
+  .actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+  button.submit{
+    background:var(--btn);color:var(--btn-text);border:0;border-radius:8px;
+    padding:12px 30px;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;
+  }
+  button.submit[disabled]{opacity:.6;cursor:default}
+  .toast{
+    display:none;background:var(--surface-2);color:#fff;border-radius:8px;
+    padding:10px 18px;font-size:14px;
+  }
+  .toast.show{display:inline-block}
+  .toast.error{background:#4A2A28;color:#F7C1C1}
+  .formerr{display:none;color:var(--required);font-size:13px;margin-top:10px}
+  .formerr.show{display:block}
+
+  /* ---------- 页脚 ---------- */
+  footer{background:var(--surface-2);margin-top:48px;padding:32px 0}
+  .foot{display:grid;grid-template-columns:1fr;gap:22px}
+  .foot h4{margin:0 0 8px;font-size:16px;font-weight:600;color:#fff}
+  .foot p{margin:0;font-size:13px;color:var(--muted);line-height:1.7}
+  .foot a{color:var(--muted);text-decoration:none}
+  .foot a:hover{color:#fff}
+  .qr{display:flex;align-items:center;gap:14px;margin-top:4px}
+  .qrbox{
+    width:84px;height:84px;flex:0 0 auto;border:1px dashed #6E7074;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px;
+  }
+  .qrbox img{width:84px;height:84px;border-radius:8px;display:block}
+  .qrtxt{font-size:12px;color:var(--muted);max-width:150px;line-height:1.5}
+
+  /* ---------- 未配置提示 ---------- */
+  .setupbar{
+    display:none;background:#4A3A20;color:#FAC775;font-size:13px;
+    padding:10px 20px;text-align:center;
+  }
+  .setupbar.show{display:block}
+  .setupbar code{background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px}
+
+  /* ---------- 桌面端 ---------- */
+  @media (min-width:760px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .grid2{grid-template-columns:1fr 1fr;gap:16px 18px}
+    .field{margin-bottom:0}
+    .formcard{padding:28px 32px}
+    .hero{padding:48px 0 12px}
+    .hero h1{font-size:34px}
+  }
+  @media (min-width:1040px){
+    .cards{grid-template-columns:repeat(3,1fr)}
+    .checks{grid-template-columns:repeat(3,1fr)}
+    .foot{grid-template-columns:1.2fr 1fr 1fr;gap:32px}
+  }
+</style>
+</head>
+<body>
+
+<div class="setupbar" id="setupbar">
+  尚未填入 Web3Forms <code>access_key</code>，表单现在还收不到数据。打开 index.html 顶部脚本里的 <code>ACCESS_KEY</code> 换掉即可。
+</div>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">ePro Select</div>
+    <div class="tag">Wholesale Inquiry</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h1>Partnership Details</h1>
+    <p>Tell us what you're looking for. We'll help you explore the right products for your business.</p>
+  </section>
+
+  <section class="section">
+    <h2>MOQ &amp; Lead Times</h2>
+    <div class="cards">
+
+      <div class="card">
+        <h3>Minimum Order Quantity (MOQ)</h3>
+        <table>
+          <tr><td class="key">Smart Cleaning (Vacuum Cleaners)</td><td class="val">1,860</td></tr>
+          <tr><td class="key">Smart Door Locks</td><td class="val">3,000</td></tr>
+          <tr><td class="key">Smart Kitchen (Dishwashers)</td><td class="val">460</td></tr>
+          <tr><td class="key">Smart Pet (Pet Food Makers)</td><td class="val">1,000</td></tr>
+          <tr><td class="key">Smart Outdoor (Cooler - CRX-14)</td><td class="val">680</td></tr>
+          <tr><td class="key">Smart Outdoor (Cooler - CRX-18)</td><td class="val">900</td></tr>
+        </table>
+      </div>
+
+      <!-- 原稿第二个表标题也是 "Minimum Order Quantity (MOQ)"，内容是天数，这里改成 Lead Time -->
+      <div class="card">
+        <h3>Lead Time</h3>
+        <table>
+          <tr><td class="key">Smart Cleaning</td><td class="val">40-46 days</td></tr>
+          <tr><td class="key">Smart Kitchen</td><td class="val">40-46 days</td></tr>
+          <tr><td class="key">Smart Door Locks</td><td class="val">45-60 days</td></tr>
+          <tr><td class="key">Smart Pet</td><td class="val">45-60 days</td></tr>
+          <tr><td class="key">Smart Outdoor</td><td class="val">45-60 days</td></tr>
+        </table>
+      </div>
+
+      <!-- 原稿第三个表标题同样是 "Minimum Order Quantity (MOQ)"，内容占位 To be added. -->
+      <div class="card">
+        <h3>Customization &amp; Packaging</h3>
+        <p class="empty">To be added.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="formcard">
+      <h2>Tell Us About Your Business</h2>
+      <p class="hint">Fields marked <span class="req">*</span> are required.</p>
+
+      <form id="inquiry" novalidate>
+        <div class="grid2">
+          <div class="field" id="f-name">
+            <label for="full_name">Full Name<span class="req">*</span></label>
+            <input type="text" id="full_name" name="full_name" placeholder="Please enter your name" autocomplete="name">
+            <p class="err">Please enter your name</p>
+          </div>
+          <div class="field" id="f-email">
+            <label for="work_email">Work Email<span class="req">*</span></label>
+            <input type="email" id="work_email" name="work_email" placeholder="Please enter your email address" autocomplete="email">
+            <p class="err">Please enter a valid email address</p>
+          </div>
+          <div class="field" id="f-country">
+            <label for="country">Country / Region<span class="req">*</span></label>
+            <input type="text" id="country" name="country" placeholder="Please enter your country or region">
+            <p class="err">Please enter your country or region</p>
+          </div>
+          <div class="field" id="f-company">
+            <label for="company">Company Name<span class="req">*</span></label>
+            <input type="text" id="company" name="company" placeholder="Please enter your company name" autocomplete="organization">
+            <p class="err">Please enter your company name</p>
+          </div>
+        </div>
+
+        <div class="field" id="f-qty" style="margin-top:16px">
+          <label for="qty">Estimated Order Quantity</label>
+          <input type="text" id="qty" name="estimated_order_quantity" placeholder="e.g. 2,000 pcs">
+        </div>
+
+        <div class="field" style="margin-top:20px">
+          <label>Product interests</label>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="interests" value="Smart Cleaning"><span class="box"></span><span>Smart Cleaning</span></label>
+            <label class="check"><input type="checkbox" name="interests" value="Smart Door Locks"><span class="box"></span><span>Smart Door Locks</span></label>
+            <label class="check"><input type="checkbox" name="interests" value="Smart Kitchen Appliances"><span class="box"></span><span>Smart Kitchen Appliances</span></label>
+            <label class="check"><input type="checkbox" name="interests" value="Smart Pet Products"><span class="box"></span><span>Smart Pet Products</span></label>
+            <label class="check"><input type="checkbox" name="interests" value="Smart Outdoor"><span class="box"></span><span>Smart Outdoor</span></label>
+          </div>
+        </div>
+
+        <label class="consent" id="f-consent">
+          <input type="checkbox" id="consent" name="consent">
+          <span class="box"></span>
+          <span>I agree to the <a href="#" onclick="return false">Privacy Policy</a> and consent to being contacted about this inquiry.</span>
+        </label>
+        <p class="formerr" id="consent-err">Please agree to the Privacy Policy before submitting.</p>
+
+        <!-- 蜜罐字段，防机器人 -->
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+        <div class="actions">
+          <button type="submit" class="submit" id="submitBtn">Submit Inquiry</button>
+          <div class="toast" id="toast">Submitted successfully</div>
+        </div>
+        <p class="formerr" id="net-err">Something went wrong. Please try again or email us directly.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <h4>ePro Select</h4>
+      <p>
+        9 Yiji Digital Building, Longjing'ao Road<br>
+        No.3 Bantian Street, Longgang District<br>
+        Shenzhen, Guangdong, China
+      </p>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p>
+        <a href="mailto:john@epro.com.cn">john@epro.com.cn</a><br>
+        <a href="mailto:dan@epro.com.cn">dan@epro.com.cn</a>
+      </p>
+    </div>
+    <div>
+      <div class="qr">
+        <!-- 把 qr.png 放到本目录即可显示，没图片时显示占位框 -->
+        <div class="qrbox" id="qrbox">QR</div>
+        <div class="qrtxt">Scan for Product Info &amp; Social Links</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============================================================
+     第 1 步：到 https://web3forms.com 用你的邮箱验证，拿到 access key
+     第 2 步：把下面的 YOUR_ACCESS_KEY_HERE 换成那串 key
+     之后每次有人提交，内容会自动发到该邮箱
+     ============================================================ */
+  var ACCESS_KEY = "YOUR_ACCESS_KEY_HERE";
+
+  var form      = document.getElementById('inquiry');
+  var btn       = document.getElementById('submitBtn');
+  var toast     = document.getElementById('toast');
+  var consentErr= document.getElementById('consent-err');
+  var netErr    = document.getElementById('net-err');
+
+  if (ACCESS_KEY === "YOUR_ACCESS_KEY_HERE" || !ACCESS_KEY) {
+    document.getElementById('setupbar').classList.add('show');
+  }
+
+  // 有 qr.png 就显示，没有就保留占位框
+  (function(){
+    var img = new Image();
+    img.onload = function(){
+      var box = document.getElementById('qrbox');
+      box.innerHTML = '';
+      img.width = 84; img.height = 84;
+      box.appendChild(img);
+    };
+    img.src = 'qr.png';
+  })();
+
+  function setInvalid(id, on){
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('invalid', !!on);
+    return !on;
+  }
+
+  function validate(){
+    var ok = true;
+    ok = setInvalid('f-name',    !document.getElementById('full_name').value.trim()) && ok;
+    ok = setInvalid('f-country', !document.getElementById('country').value.trim()) && ok;
+    ok = setInvalid('f-company', !document.getElementById('company').value.trim()) && ok;
+
+    var mail = document.getElementById('work_email').value.trim();
+    ok = setInvalid('f-email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) && ok;
+
+    var agreed = document.getElementById('consent').checked;
+    consentErr.classList.toggle('show', !agreed);
+    if (!agreed) ok = false;
+
+    return ok;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    netErr.classList.remove('show');
+    toast.classList.remove('show', 'error');
+
+    if (!validate()) return;
+
+    var interests = Array.prototype.slice.call(
+      form.querySelectorAll('input[name="interests"]:checked')
+    ).map(function(i){ return i.value; });
+
+    var payload = {
+      access_key: ACCESS_KEY,
+      subject: "New Wholesale Inquiry - ePro Select",
+      from_name: "ePro Select Website",
+      full_name: document.getElementById('full_name').value.trim(),
+      email: document.getElementById('work_email').value.trim(),
+      country_region: document.getElementById('country').value.trim(),
+      company_name: document.getElementById('company').value.trim(),
+      estimated_order_quantity: document.getElementById('qty').value.trim(),
+      product_interests: interests.join(', '),
+      consent: document.getElementById('consent').checked ? 'Yes' : 'No',
+      botcheck: false
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(res){ return res.json().then(function(j){ return { ok: res.status === 200, j: j }; }); })
+    .then(function(r){
+      btn.disabled = false;
+      btn.textContent = 'Submit Inquiry';
+      if (r.ok && r.j && r.j.success) {
+        toast.textContent = 'Submitted successfully';
+        toast.classList.add('show');
+        form.reset();
+        setTimeout(function(){ toast.classList.remove('show'); }, 4000);
+      } else {
+        toast.textContent = (r.j && r.j.message) || 'Submission failed';
+        toast.classList.add('show', 'error');
+      }
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'Submit Inquiry';
+      netErr.classList.add('show');
+    });
+  });
+</script>
+
+</body>
+</html>
