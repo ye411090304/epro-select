@@ -152,7 +152,7 @@
 <body>
 
 <div class="setupbar" id="setupbar">
-  尚未填入 Web3Forms <code>access_key</code>，表单现在还收不到数据。打开 index.html 顶部脚本里的 <code>ACCESS_KEY</code> 换掉即可。
+  尚未填入 Web3Forms <code>access_key</code>，表单现在还收不到数据。打开本文件底部脚本里的 <code>ACCESS_KEY</code> 换掉即可（收件邮箱 = 申请 key 时用的邮箱）。
 </div>
 
 <header class="topbar">
@@ -301,9 +301,14 @@
 
 <script>
   /* ============================================================
-     第 1 步：到 https://web3forms.com 用你的邮箱验证，拿到 access key
-     第 2 步：把下面的 YOUR_ACCESS_KEY_HERE 换成那串 key
-     之后每次有人提交，内容会自动发到该邮箱
+     已配置：access_key = e6cf4d49-c9aa-4b64-9a7f-b69fdae04210
+
+     注意：Web3Forms 把询盘发到「申请这串 key 时用的那个邮箱」，
+     不能在代码里改收件人。所以这串 key 必须是用 dan@epro.com.cn
+     申请的；如果当初用的是别的邮箱，去 web3forms.com 用 dan@ 重
+     新申请一串 key 替换掉即可。
+
+     客户的 Work Email 会写进 Reply-To，dan 收到邮件直接点回复就能回客户。
      ============================================================ */
   var ACCESS_KEY = "e6cf4d49-c9aa-4b64-9a7f-b69fdae04210";
 
@@ -368,6 +373,7 @@
       from_name: "ePro Select Website",
       full_name: document.getElementById('full_name').value.trim(),
       email: document.getElementById('work_email').value.trim(),
+      replyto: document.getElementById('work_email').value.trim(),
       country_region: document.getElementById('country').value.trim(),
       company_name: document.getElementById('company').value.trim(),
       estimated_order_quantity: document.getElementById('qty').value.trim(),
