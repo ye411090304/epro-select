@@ -233,6 +233,12 @@ select option{color:#1A1A1A;font-size:14px}
    SECTION: submit
    ============================================================ */
 .actions{margin-top:16px}
+.submit-err{
+  margin:0 0 10px;padding:10px 12px;
+  background:var(--err-bg);border:1px solid #F3C9C4;border-radius:5px;
+  font-size:11px;line-height:16px;color:var(--err);
+}
+.submit-err[hidden]{display:none}
 .submit{
   display:flex;align-items:center;justify-content:center;gap:9px;
   width:100%;height:35px;
@@ -674,6 +680,7 @@ select option{color:#1A1A1A;font-size:14px}
 
       <!-- SECTION: submit -->
       <div class="actions">
+        <p class="submit-err" id="submitErr" role="alert" hidden></p>
         <button type="submit" class="submit" id="submitBtn" data-primary-action>
           <span class="submit-label">Submit Inquiry</span>
           <svg viewBox="0 0 14 12" fill="none" aria-hidden="true"><path d="M0 6h12.2M8 1.2L12.8 6 8 10.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -855,6 +862,7 @@ select option{color:#1A1A1A;font-size:14px}
   var sucSummary = document.getElementById('sucSummary');
   var sucRef = document.getElementById('sucRef');
   var resetBtn = document.getElementById('resetBtn');
+  var submitErr = document.getElementById('submitErr');
 
   var DRAFT_KEY = 'epro.wholesaleInquiry.draft.v1';
   var IDLE_LABEL = 'Submit Inquiry';
@@ -1105,6 +1113,88 @@ select option{color:#1A1A1A;font-size:14px}
   });
 
   /* SECTION: submit */
+  /* Web3Forms 真实提交：POST JSON 到官方端点，access_key 由站点所有者提供。
+     注意：Web3Forms 的 access key 按设计就是放在前端的（浏览器侧调用），
+     上线后建议在 Web3Forms 后台开启 Restrict to Domain 限定来源域名。 */
+  var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+  var WEB3FORMS_ACCESS_KEY = 'e6cf4d49-c9aa-4b64-9a7f-b69fdae04210';
+
+  /* 邮件正文里显示的可读字段名（Web3Forms 会按提交的键名原样转发） */
+  var EMAIL_LABELS = {
+    companyName: 'Company Name',
+    contactPerson: 'Contact Person',
+    jobTitle: 'Title / Position',
+    country: 'Country / Region',
+    phone: 'Phone / WhatsApp',
+    website: 'Website',
+    businessType: 'Business Type',
+    salesChannel: 'Sales Channel',
+    retailScale: 'Retail Scale',
+    productCategory: 'Product Category',
+    modelInterest: 'Model of Interest',
+    estimatedQuantity: 'Estimated Quantity',
+    estimatedQuantity2: 'Estimated Quantity (2nd line)',
+    targetPrice: 'Target Price (USD / unit)',
+    sampleRequest: 'Sample Request',
+    certifications: 'Required Certifications',
+    expectedOrderTime: 'Expected Order Time',
+    message: 'Message / Additional Requirements'
+  };
+
+  function buildPayload(ref) {
+    var p = {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: 'New Wholesale Inquiry — ' + (valueOf('companyName') || 'ePro Select'),
+      from_name: valueOf('contactPerson') || valueOf('companyName') || 'Website Inquiry',
+      botcheck: ''   /* 蜜罐字段：真人提交恒为空 */
+    };
+    /* email 是 Web3Forms 保留字段，用于设置 Reply-To，方便直接回信 */
+    var mail = valueOf('email');
+    if (mail) p.email = mail;
+    Object.keys(EMAIL_LABELS).forEach(function (n) {
+      var v = valueOf(n);
+      if (v) p[EMAIL_LABELS[n]] = v;
+    });
+    /* 多选框：手动拼成逗号分隔（Web3Forms 对 JS 提交要求显式 stringify） */
+    var coop = checkedValues().join(', ');
+    if (coop) p['Cooperation Type'] = coop;
+    p['Reference'] = ref;
+    return p;
+  }
+
+  function submitToWeb3Forms(ref, onOk, onFail) {
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, 15000);
+    fetch(WEB3FORMS_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(buildPayload(ref)),
+      signal: ctrl.signal
+    }).then(function (res) {
+      clearTimeout(timer);
+      return res.json().catch(function () { return null; }).then(function (data) {
+        if (res.ok && data && data.success) {
+          onOk();
+        } else {
+          var msg = (data && (data.message || (data.body && data.body.message))) || '';
+          if (!msg) {
+            msg = res.status === 429
+              ? 'Too many requests — please try again later.'
+              : 'Submission failed (HTTP ' + res.status + '). Please try again.';
+          }
+          onFail(msg);
+        }
+      });
+    }).catch(function (err) {
+      clearTimeout(timer);
+      if (err && err.name === 'AbortError') {
+        onFail('The request timed out. Please check your connection and try again.');
+      } else {
+        onFail('Network error — could not reach the submission service. Please try again.');
+      }
+    });
+  }
+
   function setLoading(on) {
     submitBtn.disabled = on;
     if (on) {
@@ -1117,6 +1207,17 @@ select option{color:#1A1A1A;font-size:14px}
       submitArrow.style.display = '';
       var old = submitBtn.querySelector('.spinner');
       if (old) old.remove();
+    }
+  }
+
+  function setSubmitError(msg) {
+    if (!submitErr) return;
+    if (msg) {
+      submitErr.textContent = msg;
+      submitErr.hidden = false;
+    } else {
+      submitErr.textContent = '';
+      submitErr.hidden = true;
     }
   }
 
@@ -1175,24 +1276,26 @@ select option{color:#1A1A1A;font-size:14px}
       return;
     }
 
-    var idempotencyKey = refId();
+    var ref = refId();
     setLoading(true);
+    setSubmitError('');
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
-    /* 本地演示提交：不连接真实服务，仅模拟请求耗时 */
-    var started = Date.now();
-    setTimeout(function () {
-      var wait = Math.max(0, 620 - (Date.now() - started));
-      setTimeout(function () {
-        setLoading(false);
-        submitted = true;
-        dirty = false;
-        clearDraft();
-        if (saveTimer) clearTimeout(saveTimer);
-        showSuccess(idempotencyKey);
-        toast('Inquiry submitted.');
-      }, wait);
-    }, 260);
+    /* 真实提交到 Web3Forms；失败时保留已填内容与草稿，允许直接重试 */
+    submitToWeb3Forms(ref, function () {
+      setLoading(false);
+      submitted = true;
+      dirty = false;
+      clearDraft();
+      if (saveTimer) clearTimeout(saveTimer);
+      showSuccess(ref);
+      toast('Inquiry submitted.');
+    }, function (msg) {
+      setLoading(false);
+      setSubmitError(msg);
+      toast(msg, true);
+      submitBtn.focus({ preventScroll: true });
+    });
   });
 
   /* SECTION: reset */
@@ -1202,6 +1305,7 @@ select option{color:#1A1A1A;font-size:14px}
     form.reset();
     SELECT_FIELDS.forEach(function (n) { var node = el(n); if (node) syncSelect(node); });
     Object.keys(MESSAGES).concat([CK_NAME]).forEach(clearError);
+    setSubmitError('');
     submitted = false;
     dirty = false;
     clearDraft();
